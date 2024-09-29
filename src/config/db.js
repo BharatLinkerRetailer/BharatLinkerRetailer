@@ -24,9 +24,7 @@ if (!process.env.MONGODB_URL || !process.env.DB_NAME) {
 const connectDB = async () => {
     try {
         const connectionInstance = await mongoose.connect(process.env.MONGODB_URL, {
-            dbName: process.env.DB_NAME,
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
+            dbName: process.env.DB_NAME, // No deprecated options
         });
         logger.info(`MongoDB connected: ${connectionInstance.connection.host}`);
     } catch (error) {

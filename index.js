@@ -3,6 +3,7 @@ import connectDB from './src/config/db.js';
 import dotenv from 'dotenv';
 import winston from 'winston';
 import helmet from 'helmet';
+import mongoose from 'mongoose';
 
 // Load environment variables
 dotenv.config();
@@ -51,4 +52,3 @@ connectDB()
         logger.error('MongoDB connection failed:', error);
         process.exit(1); // Exit process if MongoDB fails to connect
     });
-
