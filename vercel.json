@@ -1,5 +1,5 @@
 {
-    "version": 2,
+    "version": 1,
     "builds": [
       {
         "src": "index.js",
@@ -11,14 +11,6 @@
         "src": "/(.*)",
         "dest": "index.js"
       }
-    ],
-    "env": {
-      "MONGODB_URL": "mongodb+srv://BharatLinkerRetailerDB:shubham20DAS%40@bharatlinkerretailer.y8dbk.mongodb.net/",
-      "DB_NAME": "BharatLinkerRetailerDB",
-      "CLOUDINARY_CLOUD_NAME": "dycjklpy5",
-      "CLOUDINARY_API_KEY": "931953682192628",
-      "CLOUDINARY_API_SECRET": "-rP0lbZ9_6yRW-fi_Lgt1Kulgys",
-      "CLOUDINARY_URL": "cloudinary://931953682192628:-rP0lbZ9_6yRW-fi_Lgt1Kulgys@dycjklpy5"
-    }
+    ]
   }
   
