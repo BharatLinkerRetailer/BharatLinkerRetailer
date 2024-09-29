@@ -51,15 +51,14 @@ const shopLogin = async (req, res) => {
 };
 
 const shopSignUp = async (req, res) => {
-    const { owner, shopName, pinCodes, address,shopPhoneNumber, email, password } = req.body;
+    const { owner, shopName, pinCodes, shopAddress,shopPhoneNumber, email, password } = req.body;
    
     try {
         // Parse owner and location data from JSON strings
         // const ownerData = JSON.parse(owner);
-        const ownerData = req.body.owner;
+        const ownerData = owner;
         // const pincodeData = Array.isArray(pinCodes) ? pinCodes : pinCodes.split(',');
         const pincodeData =pinCodes;
-        console.log(ownerData, req.body.shopName,pinCodes);
 
         // Check if the shop already exists by phone number or email
         const existingShop = await Shop.findOne({
@@ -80,7 +79,7 @@ const shopSignUp = async (req, res) => {
             owner: ownerData,
             shopName,
             pinCodes:pincodeData,
-            address,
+            address:shopAddress,
             phoneNumber:shopPhoneNumber,
             email,
             password: hashedPassword,

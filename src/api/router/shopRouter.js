@@ -8,7 +8,7 @@ const router=Router();
 
 //LOGIN SIGNUP
 router.route('/signup').post(upload.array('images'),shopSignUp)
-router.route('/login').post(shopLogin)
+router.route('/login').post(upload.array('images'),shopLogin)
 
 //GET INFO
 router.route('/getshops').post(getShops)

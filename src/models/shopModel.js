@@ -30,8 +30,7 @@ const shopSchema = new Schema({
         required: true
     },
     pinCodes: [{
-        type: Number,
-        required: true
+        type: Number
     }],
     address: {
         type: String,
