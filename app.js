@@ -24,7 +24,11 @@ app.use(cookieParser());
 
 // Enable CORS with stricter options for production
 const corsOptions = {
-    origin:["http://localhost:5173","http://192.168.48.200:5173"],
+    origin:[
+        "http://localhost:5173",
+        "http://192.168.48.200:5173",
+        "https://bharatlinker.shop"
+    ],
     optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
