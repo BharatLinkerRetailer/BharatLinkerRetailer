@@ -224,6 +224,37 @@ const deleteShopImage = asyncHandler(async (req, res) => {
 });
 
 
+// const uploadShopImage = asyncHandler(async (req, res) => {
+//     const { shopId } = req.body;
+//     let images = [];
+//     const files = req.files;
+
+//     if (!files || files.length === 0) {
+//         return res.status(404).json({ message: "There are no images to upload." });
+//     }
+
+//     try {
+       
+//         for (const file of files) {
+//             const imageUrl = await uploadOnCloudinary(file.path);
+//             images.push(imageUrl);
+//         }
+
+//         const shop = await Shop.findById(shopId);
+//         if (!shop) {
+//             return res.status(404).json({ message: 'Shop not found.' });
+//         }
+
+//         shop.shopImages = [...shop.shopImages, ...images];
+//         await shop.save();
+
+//         res.status(200).json({ message: 'Images uploaded successfully!', images: images });
+//     } catch (error) {
+//         console.error('Error uploading shop images:', error);
+//         res.status(500).json({ message: 'Server error occurred while uploading images.', error });
+//     }
+// });
+
 const uploadShopImage = asyncHandler(async (req, res) => {
     const { shopId } = req.body;
     let images = [];
@@ -235,9 +266,10 @@ const uploadShopImage = asyncHandler(async (req, res) => {
     }
 
     try {
-        // Upload each file to Cloudinary
+        // Upload each file buffer to Cloudinary
         for (const file of files) {
-            const imageUrl = await uploadOnCloudinary(file.path);
+            // Use the file buffer instead of file.path
+            const imageUrl = await uploadOnCloudinary(file.buffer); // Pass buffer directly to Cloudinary
             images.push(imageUrl); // Assuming uploadOnCloudinary returns the URL
         }
 
@@ -247,8 +279,8 @@ const uploadShopImage = asyncHandler(async (req, res) => {
             return res.status(404).json({ message: 'Shop not found.' });
         }
 
-        // Update shop images
-        shop.shopImages = [...shop.shopImages, ...images]; // Append new images to existing ones
+        // Update shop images by appending new ones
+        shop.shopImages = [...shop.shopImages, ...images];
         await shop.save();
 
         res.status(200).json({ message: 'Images uploaded successfully!', images: images });
@@ -257,6 +289,7 @@ const uploadShopImage = asyncHandler(async (req, res) => {
         res.status(500).json({ message: 'Server error occurred while uploading images.', error });
     }
 });
+
 
 
 const openclosed = asyncHandler(async (req, res) => {
