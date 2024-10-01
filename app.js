@@ -25,7 +25,7 @@ app.use(cookieParser());
 // Enable CORS with stricter options for production
 const corsOptions = {
     origin: [
-        "https://www.bharatlinker.shop/",
+        "https://www.bharatlinker.shop",
         "http://localhost:5173",
         "http://192.168.48.200:5173",
         "https://www.bharatlinker.shop"

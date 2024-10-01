@@ -29,6 +29,9 @@ const shopSchema = new Schema({
         type: String,
         required: true
     },
+    category:{
+        type: String
+    },
     pinCodes: [{
         type: Number
     }],

@@ -1,5 +1,4 @@
 import { Shop } from '../../models/shopModel.js';
-import { CacheShop } from '../../models/cacheShopModel.js';
 import { apiFeatures } from '../../utils/apiFeatures.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { uploadOnCloudinary } from '../../utils/cloudinary.js';
@@ -100,29 +99,43 @@ const shopSignUp = async (req, res) => {
 
 
 const getShops = asyncHandler(async (req, res, next) => {
+    console.log(req.query)
+    // Create an instance of ApiFeatures with filtering and pagination methods
     const apiFeature = new apiFeatures(Shop.find(), req.query)
-        .searchShop()
-        .filterByPincode();
-
-    // Pagination logic
-    const page = parseInt(req.query.page, 10) || 1; // Get the page number from query, default to 1
-    const limit = parseInt(req.query.limit, 10) || 15; // Get the limit from query, default to 15
-    const skip = (page - 1) * limit; // Calculate number of documents to skip
-
-    apiFeature.query = apiFeature.query.limit(limit).skip(skip); // Apply pagination
-
+       .searchShop()    // Apply shop name search
+       .search()        // Apply keyword search
+       .filter()        // Apply other filters
+       .filterByPincode()
+       .filterByRegisterStatus()
+       .filterByCategory();
+ 
+    // Pagination logic: Apply after filters and search are executed
+    const resultPerPage = parseInt(req.query.limit, 10) || 15;  // Default limit is 15
+    apiFeature.pagination(resultPerPage);  // Apply pagination method from ApiFeatures
+ 
+    // Execute the query
     const shops = await apiFeature.query;
-    const totalShops = await Shop.countDocuments();
-
+    const filteredShopsCount = shops.length;  // Number of shops after filtering
+    const totalShops = await Shop.countDocuments(apiFeature.getFilter()); // Count based on filters
+ 
+    // Calculate total pages
+    const currentPage = parseInt(req.query.page, 10) || 1;
+    const totalPages = Math.ceil(totalShops / resultPerPage);
+ 
+    // Send the response
     res.status(200).json({
-        success: true,
-        shops,
-        count: shops.length,
-        total: totalShops,
-        currentPage: page,
-        totalPages: Math.ceil(totalShops / limit),
+       success: true,
+       shops,
+       count: filteredShopsCount,
+       total: totalShops,
+       currentPage,
+       totalPages,
     });
-});
+ });
+
+
+
+
 
 const getShopDetail = asyncHandler(async (req, res) => {
     const { shopId } = req.query;

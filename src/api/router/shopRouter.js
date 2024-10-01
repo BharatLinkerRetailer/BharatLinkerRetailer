@@ -11,7 +11,7 @@ router.route('/signup').post(upload.array('images'),shopSignUp)
 router.route('/login').post(upload.array('images'),shopLogin)
 
 //GET INFO
-router.route('/getshops').post(getShops)
+router.route('/getshops').get(getShops)
 router.route('/getshopdetails').get(getShopDetail)
 router.route('/getowner').post(ownerDetail)
 

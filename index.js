@@ -10,7 +10,7 @@ dotenv.config();
 // Secure Express app by setting various HTTP headers
 app.use(helmet());
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3005;
 
 // Check if required environment variables are provided
 if (!process.env.MONGODB_URL) {
