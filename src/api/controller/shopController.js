@@ -40,6 +40,7 @@ const shopLogin = async (req, res) => {
                 phoneNumber: shop.phoneNumber,
                 email: shop.email,
                 status: shop.status,
+                pincodes:shop.pinCodes,
                 registerStatus: shop.registerStatus,
             }
             // token, 
