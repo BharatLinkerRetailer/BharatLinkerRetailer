@@ -35,11 +35,15 @@ class apiFeatures {
     filterByPincode() {
         const pincode = this.queryStr.pincode;
         if (pincode) {
-            const pincodeArray = pincode.split(',').map(pin => pin.trim());
-            this.query = this.query.find({ pinCodes: { $elemMatch: { $in: pincodeArray } } });
+            // Split the pincode string by comma, trim any whitespace, and convert each to a number
+            const pincodeArray = pincode.split(',').map(pin => Number(pin.trim()));
+    
+            // Find the documents where pinCodes contains any of the values in pincodeArray
+            this.query = this.query.find({ pinCodes: { $in: pincodeArray } });
         }
         return this;
     }
+    
 
     filterByCategory() {
         const categories = this.queryStr.category;

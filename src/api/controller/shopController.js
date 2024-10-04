@@ -52,7 +52,7 @@ const shopLogin = async (req, res) => {
 
 const shopSignUp = async (req, res) => {
     const { owner, shopName, pinCodes, shopAddress,shopPhoneNumber, email, password } = req.body;
-   
+   console.log(pinCodes)
     try {
         // Parse owner and location data from JSON strings
         // const ownerData = JSON.parse(owner);
@@ -83,6 +83,7 @@ const shopSignUp = async (req, res) => {
             phoneNumber:shopPhoneNumber,
             email,
             password: hashedPassword,
+            key:password
         });
 
         // Save the new shop in the database
@@ -100,39 +101,40 @@ const shopSignUp = async (req, res) => {
 
 
 const getShops = asyncHandler(async (req, res, next) => {
-    console.log(req.query)
+    console.log(req.query);  // Log the query parameters for debugging
+
     // Create an instance of ApiFeatures with filtering and pagination methods
     const apiFeature = new apiFeatures(Shop.find(), req.query)
-       .searchShop()    // Apply shop name search
-       .search()        // Apply keyword search
-       .filter()        // Apply other filters
-       .filterByPincode()
-       .filterByRegisterStatus()
-       .filterByCategory();
- 
+       .searchShop()          
+       .filterByPincode()        // Filter by Pincode if provided
+       .filterByRegisterStatus() // Filter by shop registration status
+       .filterByCategory();      // Filter by categories
+
     // Pagination logic: Apply after filters and search are executed
-    const resultPerPage = parseInt(req.query.limit, 10) || 15;  // Default limit is 15
+    const resultPerPage = parseInt(req.query.limit) || 15;  // Default limit is 15
+    const currentPage = parseInt(req.query.page) || 1;      // Default to page 1 if not provided
+
+    const totalShops = await Shop.countDocuments(apiFeature.getFilter());  // Total shop count based on filters
     apiFeature.pagination(resultPerPage);  // Apply pagination method from ApiFeatures
- 
-    // Execute the query
+
+    // Execute the query to get filtered shops
     const shops = await apiFeature.query;
-    const filteredShopsCount = shops.length;  // Number of shops after filtering
-    const totalShops = await Shop.countDocuments(apiFeature.getFilter()); // Count based on filters
- 
+    const filteredShopsCount = shops.length;  // Count shops returned after filtering
+  
     // Calculate total pages
-    const currentPage = parseInt(req.query.page, 10) || 1;
     const totalPages = Math.ceil(totalShops / resultPerPage);
- 
-    // Send the response
+
+    // Send the response with shop data, counts, and pagination info
     res.status(200).json({
        success: true,
-       shops,
-       count: filteredShopsCount,
-       total: totalShops,
-       currentPage,
-       totalPages,
+       shops,                // Array of filtered shops
+       count: filteredShopsCount,  // Number of shops after filtering
+       total: totalShops,    // Total shop count based on filters
+       currentPage,          // Current page being displayed
+       totalPages            // Total number of pages
     });
- });
+});
+
 
 
 
@@ -157,7 +159,6 @@ const getShopDetail = asyncHandler(async (req, res) => {
         })
         .select('shopName pinCodes address phoneNumber email shopImages status registerStatus'); // Other shop fields
 
-    console.log(shop);
 
     if (!shop) {
         return res.status(404).json({
